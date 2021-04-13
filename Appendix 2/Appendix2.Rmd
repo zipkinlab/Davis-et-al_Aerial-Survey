@@ -1,0 +1,419 @@
+---
+title: "Appendix 2. Flock Size Quiz"
+author: "Kayla Davis"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+## Set-up
+#Load libraries
+#Libraries
+library(ggpubr)
+library(reshape)
+library(tidyverse)
+library(ggplot2)
+library(lme4)
+library(piecewiseSEM)
+library(knitr)
+library(captioner)
+library(tinytex)
+
+#Functions
+se <- function(x){sd(x)/sqrt(length(x))}
+
+  #figure/table caption functions
+figs <- captioner(prefix = "Figure")
+tabs <- captioner(prefix = "Table")
+
+#fig captions
+figs(name = "Fig1", "Histogram of known flock size images (true sizes) included in the flock size counting quiz. Flock sizes ranged from 3-838 individuals.")
+figs(name = "Fig2", "Histogram of flock size counts recorded per sampling unit during winter GoMMAPPS surveys (2018-2020).")
+figs(name = "Fig3", "Absolute value of the difference in respondents’ counts and the true flock size for each of the 22 quiz images. Points show the mean absolute values and error bars are 95% confidence intervals. Differences in respondents’ counts and the true flock size increased with flock size.")
+figs(name = "Fig4", "Absolute value of the percent difference in respondents’ counts and the true flock size for each of the 22 quiz images. Points show the mean absolute values and error bars are 95% confidence intervals. Respondent errors increased with flock size and were as high as approximately 50% of the true flock size.")
+figs(name = "Fig5", "Percent difference in respondents’ counts and the true flock size for each of the 22 quiz images. Points show the mean absolute values and error bars are 95% confidence intervals. In most cases, respondents underestimated flock size, and this tendency to underestimate increased with flock size.")
+figs(name = "Fig6", "Boxplots of observer error and log of observer error (absolute value of percent difference in respondent count and true flock size) for respondents in each of the four experience categories. There was virtually no difference in observer error across experience levels.")
+figs(name = "Fig7", "Boxplots of observer error and log of observer error (absolute value of percent difference in respondent count and true flock size) for respondents in each of the three confidence level categories. There was no difference in observer error across confidence level categories; although, respondents who self-identified as having intermediate levels of confidence in their counting skills performed slightly better than respondents with low and high levels of confidence in their counting skills.")
+
+```
+
+```{r load data, include=FALSE}
+#load data
+d <- read.csv("./FlockQuizResults.csv", header = T, as.is = T)
+
+
+## Data Wrangling
+#separate out data background questions on experience and quiz questions
+d2 <- subset(d[,7:28])
+d2 <- cbind(d2, d$B.Q1, d$B.Q3)
+
+#pull out the key found in row one
+key <- d2[3,]
+key <- key[-(23:24)]
+key <- as.numeric(key)
+
+#remove key from data 
+d2 <- d2[-3,]
+
+#remove test responses (all responses before 4/15/2019)
+d2 <- d2[-(1:11),]
+
+#get rid of na's
+d2[d2==""]  <- NA 
+d2[!complete.cases(d2),] 
+d2 <- drop_na(d2)
+
+#change to numeric
+d3 <- lapply(d2[,1:22], as.numeric)
+d3 <- as.data.frame(d3)
+d3 <- cbind(d3, exp = d2$`d$B.Q1`, conf = d2$`d$B.Q3`)
+
+#change character strings to something shorter for summaries
+d3$exp <- case_when(
+d3$exp =="Participate in aerial surveys regularly as part of my job (10+)" ~ "Expert",
+d3$exp == "Participated in several surveys (4-10)"~ "Intermediate",
+d3$exp == "Participated in a couple surveys (1-3)"~ "Novice",
+d3$exp == "Never collected data for an aerial bird survey" ~ "None",
+TRUE ~ "No match")
+
+d3$conf <- case_when(
+  d3$conf == "Low confidence in estimates"~ "Low",
+  d3$conf == "Intermediate confidence in estimates" ~ "Intermediate",
+  d3$conf == "High confidence in estimates" ~"High",
+  TRUE ~ "No match"
+)
+
+d3$exp <- as.factor(d3$exp)
+d3$conf <- as.factor(d3$conf)
+
+#number of respondents in each experience category
+summary(d3$exp)
+#number of respondents in each confidence category
+summary(d3$conf)
+```
+
+
+## Flock Size Quiz Methods
+
+We designed an online flock counting quiz using Qualtrics survey software. The design and content of the quiz were adapted from the U.S. Fish and Wildlife Service Aerial Observer Training and Testing Resources (https://www.fws.gov/waterfowlsurveys/). We distributed the quiz via email to trained observers in the U.S. Fish and Wildlife Pilot Biologist Program and biologists with no aerial survey experience. The quiz consisted of background questions regarding respondents’ level of experience conducting aerial bird surveys (Expert, Intermediate, Novice, No Experience) and confidence in their flock counting skills (High, Medium, Low). The flock counting portion of the quiz consisted of two practice images and 22 timed quiz images of known-size flocks. Each image was displayed for 10 seconds before it disappeared, and the quiz automatically advanced to a question asking “How many birds were in the image?” The flock sizes in presented images ranged from 3-838 individuals (Figure A1). We chose to feature images of relatively small flocks (<100 inds) most heavily because the GoMMAPPS field data indicated that most of the flocks observed were in this size range (Figure A2), and previous studies have focused on large flocks (200-6000 inds; Frederick et al. 2003). Given the frequency of small flocks in our field data and the relative lack of information on observer counting errors at small flock sizes, we deemed it important to include more small flock images in our quiz set than large flock images.
+
+
+## Results
+
+After distributing the quiz via email, we collected responses for three weeks. We received 89 responses in total, and we were able to use 78 of those for further analysis. The 11 quiz responses that we discarded were either test responses that were collected before the official survey distribution window or were incomplete. We received quiz responses from respondents with various levels of experience conducting aerial surveys (Table A1) and confidence in their flock counting skills (Table A2). The actual flock sizes, mean respondent count, and mean absolute percent difference in respondent count and actual flock size are given in Table A3.
+
+As we expected, we found that observer error increased with flock size (Figure A3). The percent difference in quiz respondent counts and the true flock size were similar to what Frederick et al. 2003 observed. For flock sizes >200 individuals, respondents were, on average, 40-50% off in their counts from the true flock size values (Figure A4). Even at relatively small flock sizes (<100 individuals), average respondent counts were as much as 30% different from the true flock sizes (Figure A4). Most observers underestimated flock size (Figure A5). Across all flock sizes presented (3-838), 62% of responses underestimated the true flock size. Underestimation was most apparent for flock sizes of ~30 individuals or more with 50-70% of responses underestimated for all images with flock sizes of 30 or greater (Figure A6).
+
+There was little difference in observer error among respondents across the experience levels (Figure A7). However, respondents who ranked themselves with intermediate levels of confidence in their flock counting skills performed slightly better than respondents with high or low levels of confidence; although, this difference was not significant (Figure A8).
+
+\newpage
+
+Tables
+
+```{r, echo=FALSE}
+exp.tab <- summary(d3$exp)
+
+
+  kable(exp.tab, row.names = TRUE, col.names = c("Number of Respondents"), align = 'l', caption = "The number of quiz respondents who self-identified in each experience category representing their level of experience conducting aerial surveys for counts.")
+```
+
+\newpage
+
+```{r, echo=FALSE}
+  
+conf.tab <- summary(d3$conf)
+
+  kable(conf.tab, row.names = TRUE, col.names = c("Number of Respondents"), align = 'l', caption = "The number of quiz respondents who self-identified in each confidence category representing their level of confidence in their own flock counting skills. ")
+```
+
+
+```{r, echo=FALSE}
+#find absolute difference
+abs.diff <- d3[,1:22]
+abs.diff <- sweep(abs.diff, 2, key) #this function substracts the true value from each observer response
+abs.diff <- abs(abs.diff) #now take the absolute value of difference in observer response minus true value
+
+#find col means and SE of absolute differences
+diff <- colMeans(abs.diff) #each column represents a quiz question, so we get the average observer abs.diff for each question
+diff.se <- apply(FUN = se, abs.diff, MARGIN = 2) #this and following functions give SE and 95% CIs
+diff.upr <- diff + (diff.se * 1.96)
+diff.lwr <- diff - (diff.se * 1.96)
+
+#combine with key into data frame
+diff.df <- data.frame(cbind(diff, diff.lwr, diff.upr, key))
+
+#order by flock size
+diff.df <- diff.df[order(key),]
+
+#do percent diff
+perc.diff <- d3[,1:22]
+perc.diff <- sweep(perc.diff, 2, key)
+perc.diff <- sweep(perc.diff, 2, FUN = "/", key)
+
+#find col means and SE of absolute differences
+perc <- colMeans(perc.diff)
+perc.se <- apply(FUN = se, perc.diff, MARGIN = 2)
+perc.upr <- perc + (perc.se * 1.96)
+perc.lwr <- perc - (perc.se * 1.96)
+
+#combine with key into data frame
+perc.df <- data.frame(cbind(perc, perc.lwr, perc.upr, key))
+
+#order by flock size
+perc.df <- perc.df[order(key),]
+
+#same but for absolute value of percent difference
+#because over and under estimates cancel when we average
+abs.perc <- abs(perc.diff)
+
+#find col means and SE of absolute differences
+abp <- colMeans(abs.perc)
+abp.se <- apply(FUN = se, abs.perc, MARGIN = 2)
+abp.upr <- abp + (abp.se * 1.96)
+abp.lwr <- abp - (abp.se * 1.96)
+
+#combine with key into data frame
+abp.df <- data.frame(cbind(abp, abp.lwr, abp.upr, key))
+
+#order by flock size
+abp.df <- abp.df[order(key),]
+  
+means <- colMeans(d3[,-(23:24)])
+
+means.se <- apply(FUN = se, d3[,-(23:24)], MARGIN = 2)
+
+tab3 <- data.frame(key, means, means.se, abp, abp.se)
+tab3 <- tab3[order(key),]
+
+  kable(tab3, row.names = T, digits = 2, col.names = c("Key", "Mean Count", "SE Count", "Absolute % Diff", "SE % Diff"), align = 'l', caption = "True flock sizes of each quiz question (True), the mean and standard error of respondent counts, and the absolute percent difference and standard error of percent difference in respondent counts and the true flock size.")
+```
+
+
+\newpage
+
+```{r, echo=FALSE}
+hist(key, breaks = 12, xlab = "Flock Size Images Included in Quiz", main = NULL, col = "dodgerblue3")
+```
+
+`r figs("Fig1")`
+
+```{r gommapps data, echo=FALSE}
+# First step to load data and row bind dataframes together
+f18 <- read.csv("./F18.csv")
+f19 <- read.csv("./F19.csv")
+f20 <- read.csv("G:./F20.csv")
+
+# drop non matching columns
+f19$gopro <- NULL
+f19$notes <- NULL
+
+f20$gopro <- NULL
+f20$notes <- NULL
+f20$type <- NULL
+f20$spp_guild <- NULL
+
+# Row bind data frames
+data <- rbind(f18, f19, f20)
+
+# check it
+#head(data)
+
+# check that it's the right number of units
+#length(unique(data$hexagon))
+
+
+# sum up counts by hexagon
+#detach(package:plyr)
+counts <- data %>% 
+  group_by(year, month, day, hexagon, SST, SSH, SAL, SAL_15, SSH_15, SST_15, F19, F20) %>%
+  summarize(count = sum(count)) %>%
+  arrange(year,hexagon)
+#head(counts)
+
+
+# ---------------------------------------------------------------#
+# Collect summary statistics
+# Distribution of flock counts per hexagon-unit
+
+hist(counts$count, breaks = 800, xlim = c(0,800), col = "dodgerblue3", xlab="Flock Counts per Sampling Unit", main=NULL)
+```
+
+`r figs("Fig2")`
+
+
+
+```{r data manip, echo=FALSE, warning=FALSE}
+#find absolute difference
+abs.diff <- d3[,1:22]
+abs.diff <- sweep(abs.diff, 2, key) #this function substracts the true value from each observer response
+abs.diff <- abs(abs.diff) #now take the absolute value of difference in observer response minus true value
+
+#find col means and SE of absolute differences
+diff <- colMeans(abs.diff) #each column represents a quiz question, so we get the average observer abs.diff for each question
+diff.se <- apply(FUN = se, abs.diff, MARGIN = 2) #this and following functions give SE and 95% CIs
+diff.upr <- diff + (diff.se * 1.96)
+diff.lwr <- diff - (diff.se * 1.96)
+
+#combine with key into data frame
+diff.df <- data.frame(cbind(diff, diff.lwr, diff.upr, key))
+
+#order by flock size
+diff.df <- diff.df[order(key),]
+
+#plot mean absolute difference and CIs for different flock sizes
+ggplot(data = diff.df, aes(x = key, y = diff)) +
+  geom_errorbar(aes(x = key, ymax = diff.upr, ymin = diff.lwr), position = "dodge", size = 1)+
+  geom_point(aes(x = key, y = diff, position="dodge"), color = "dodgerblue3", size = 3) +
+  theme_light(base_size = 12)+
+  xlab("True Flock Size")+
+  ylab("Difference in Count and True Size")
+```
+
+`r figs("Fig3")`
+
+```{r data manip2, echo=FALSE, warning=FALSE}
+#do percent diff
+perc.diff <- d3[,1:22]
+perc.diff <- sweep(perc.diff, 2, key)
+perc.diff <- sweep(perc.diff, 2, FUN = "/", key)
+
+#find col means and SE of absolute differences
+perc <- colMeans(perc.diff)
+perc.se <- apply(FUN = se, perc.diff, MARGIN = 2)
+perc.upr <- perc + (perc.se * 1.96)
+perc.lwr <- perc - (perc.se * 1.96)
+
+#combine with key into data frame
+perc.df <- data.frame(cbind(perc, perc.lwr, perc.upr, key))
+
+#order by flock size
+perc.df <- perc.df[order(key),]
+
+#same but for absolute value of percent difference
+#because over and under estimates cancel when we average
+abs.perc <- abs(perc.diff)
+
+#find col means and SE of absolute differences
+abp <- colMeans(abs.perc)
+abp.se <- apply(FUN = se, abs.perc, MARGIN = 2)
+abp.upr <- abp + (abp.se * 1.96)
+abp.lwr <- abp - (abp.se * 1.96)
+
+#combine with key into data frame
+abp.df <- data.frame(cbind(abp, abp.lwr, abp.upr, key))
+
+#order by flock size
+abp.df <- abp.df[order(key),]
+
+#plot mean absolute difference and CIs for different flock sizes
+ggplot(data = abp.df, aes(x = key, y = abp * 100)) +
+  geom_errorbar(aes(x = key, ymax = abp.upr * 100, ymin = abp.lwr * 100), position = "dodge", size = 1) +
+  geom_point(aes(x = key, y = abp * 100, position="dodge"), color = "dodgerblue3", size = 3) +
+  theme_light(base_size = 12)+
+  xlab("True Flock Size")+
+  ylab("Absolute Value of Observer Error")
+```
+
+`r figs("Fig4")`
+
+```{r underestimates, echo=FALSE, warning=FALSE}
+
+#plot mean absolute difference and CIs for different flock sizes
+ggplot(data = perc.df, aes(x = key, y = perc * 100)) +
+  geom_hline(yintercept = 0, size = 1.2, linetype = "dashed", color = "darkorange3") + 
+  geom_errorbar(aes(x = key, ymax = perc.upr * 100, ymin = perc.lwr * 100), position = "dodge", size = 1)+
+  geom_point(aes(x = key, y = perc * 100, position="dodge"), color = "dodgerblue3", size = 3) +
+  theme_light(base_size = 12)+
+  xlab("True Flock Size")+
+  ylab("Observer Error")
+
+
+```
+
+`r figs("Fig5")`
+
+
+
+```{r underestimate summary, echo=FALSE, fig.height=5, fig.width=10}
+
+#calculate some summary statistics
+total.under <- (sum(perc.diff < 0))/(78 * 22) * 100 #percentage of total underestimated responses across all flock sizes
+
+zero <- colSums(perc.diff == 0) 
+under <- colSums(perc.diff < 0) 
+over <- colSums(perc.diff > 0) 
+
+est <- data.frame(key, zero, under, over)
+est.long <- gather(est, key = "key", value = "diff")
+est.long$size <- rep(key, times = 3)
+
+
+# ggplot(data = est.long, aes(x=size, y=diff, fill=key))+
+#   geom_bar(stat = "identity", width = 1) +
+#   theme_light(base_size = 14)+
+#   theme(legend.position = "top")+
+#   guides(fill=guide_legend(title="Key"))+
+#   theme(legend.background = element_rect(fill = "white", size = 0.5, linetype = "solid", colour = "black"))+
+#   xlab("True Flock Size")+
+#   ylab("Number of Responses")
+
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE}
+#convert absolute perc difference data to long format for an analysis
+obs.err = gather(abs.perc, key = "question", value = "error")
+
+#add experience and confidence column data
+obs.err$exp = rep(d3$exp)
+obs.err$conf = rep(d3$conf)
+
+#add true flock size data
+obs.err$true = rep(key, each = 78)
+
+#add observer id number
+obs.err$id = as.factor(rep(1:78))
+
+#a little clean up and formatting
+obs.err$error <- obs.err$error *100
+obs.err$exp <- droplevels(obs.err$exp)
+obs.err$conf <- droplevels(obs.err$conf)
+
+# I reorder the groups order : I change the order of the factor data$names
+obs.err$exp <- factor(obs.err$exp , levels=c("Expert", "Intermediate", "Novice", "None"))
+obs.err$conf <- factor(obs.err$conf , levels=c("High", "Intermediate", "Low"))
+
+
+### Take a look at observer error data
+ #plot key relationships
+par(mfcol=c(2,1))
+mat <- c(1,2)
+layout(mat, widths = rep(1,1), heights = rep(1,1))
+par(mar=c(2.4, 4, 0.25 ,0.25))
+plot(error ~ exp, data = obs.err, xlab = NULL, ylab = "Observer Error", col = "dodgerblue3")
+par(mar=c(4, 4, 0.1 ,0.25))
+plot(log(error) ~ exp, data = obs.err, xlab = "Experience Level", ylab = "Log(Obs. Error)", col = "dodgerblue3")
+```
+
+`r figs("Fig6")`
+
+```{r, echo=FALSE, warning=FALSE}
+par(mfcol=c(2,1))
+mat <- c(1,2)
+layout(mat, widths = rep(1,1), heights = rep(1,1))
+par(mar=c(2.5, 4, 0.25,0.25))
+plot(error ~ conf, data = obs.err, xlab = NULL, ylab = "Observer Error", col = "dodgerblue3") 
+par(mar=c(4, 4, 0.1 ,0.25))
+plot(log(error) ~ conf, data = obs.err, xlab = "Confidence Level", ylab = "Log(Obs. Error)", col = "dodgerblue3") 
+```
+
+`r figs("Fig7")`
+
+
+
+
