@@ -229,7 +229,7 @@ data <- rbind(f18, f19, f20)
 # sum up counts by hexagon
 #detach(package:plyr)
 counts <- data %>% 
-  group_by(year, month, day, hexagon, SST, SSH, SAL, SAL_15, SSH_15, SST_15, F19, F20) %>%
+  group_by(year, month, day, hexagon, F19, F20) %>%
   summarize(count = sum(count)) %>%
   arrange(year,hexagon)
 #head(counts)
