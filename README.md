@@ -2,7 +2,7 @@
 
 ### [Kayla L. Davis](https://davisk93.github.io/), Emily D. Silverman, [Allison L. Sussman](https://github.com/asussman52), R. Randy Wilson,  & [Elise F. Zipkin](https://ezipkin.github.io/)
 
-### Code/Data DOI: 
+### Code/Data DOI: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4685098.svg)](https://doi.org/10.5281/zenodo.4685098)
 
 ### Please contact the first author for questions about the code or data: Kayla L. Davis (davisk93@msu.edu)
 __________________________________________________________________________________________________________________________________________
