@@ -16,9 +16,34 @@ ________________________________________________________________________________
 
 
 ## Data
-  
+
+[gommapps_aerialSurvey_Feb2018_birds.csv](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/gommapps_aerialSurvey_Feb2018_birds.csv): File containing count data from winter 2018 marine bird surveys. 
+
+[gommapps_aerialSurvey_July2018.csv](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/gommapps_aerialSurvey_July2018.csv): File containing count data from summer 2018 marine bird surveys.
+
+[gommapps_aerialSurvey_Feb2019.csv](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/gommapps_aerialSurvey_Feb2019.csv): File containing count data from winter 2019 marine bird surveys.
+
+[specieslists.csv](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/specieslists.csv): List containing all species observed during GoMMAPPS aerial surveys.
+
+
+[Figures](https://github.com/davisk93/Davis-et-al_Aerial-Survey/tree/main/Figures): Folder containing data needed to recreate figures 2 and 3 
+
+[Appendix 2](https://github.com/davisk93/Davis-et-al_Aerial-Survey/tree/main/Appendix%202): Folder containing data and code needed to recreate appendix 2
 
 ## Code
 
+[AmbiguousGrpsFunction.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/AmbiguousGrpsFunction.R): This script contains a function to identify ambiguous species identifications. Run this before running any of the "Unreconciled-DO" scripts.
 
+[Matching-Function.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/Matching-Function.R): This script contains a function to automate matching of double observer records. Rund this before running any of the "Unreconciled-DO" scripts.
+
+[Unreconciled-DO_F18_comments.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/Unreconciled-DO_F18_comments.R): This script performs matching of double observer records for winter 2018 survey and creates summary statistics for crew member detection and counting.
+
+[Unreconciled-DO_J18_comments.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/Unreconciled-DO_J18_comments.R): This script performs matching of double observer records for summer 2018 survey and creates summary statistics for crew member detection and counting.
+
+[Unreconciled-DO_F19_comments.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/Unreconciled-DO_F19_comments.R): This script performs matching of double observer records for summer 2019 survey and creates summary statistics for crew member detection and counting.
+
+
+[Figures](https://github.com/davisk93/Davis-et-al_Aerial-Survey/tree/main/Figures): Folder containing scripts needed to recreate figures 2 and 3 
+
+[Appendix 2](https://github.com/davisk93/Davis-et-al_Aerial-Survey/tree/main/Appendix%202): Folder containing data and code needed to recreate appendix 2
 
