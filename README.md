@@ -34,7 +34,7 @@ ________________________________________________________________________________
 
 [AmbiguousGrpsFunction.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/AmbiguousGrpsFunction.R): This script contains a function to identify ambiguous species identifications. Run this before running any of the "Unreconciled-DO" scripts.
 
-[Matching-Function.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/Matching-Function.R): This script contains a function to automate matching of double observer records. Rund this before running any of the "Unreconciled-DO" scripts.
+[Matching-Function.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/Matching-Function.R): This script contains a function to automate matching of double observer records. Run this before running any of the "Unreconciled-DO" scripts.
 
 [Unreconciled-DO_F18_comments.R](https://github.com/davisk93/Davis-et-al_Aerial-Survey/blob/main/Unreconciled-DO_F18_comments.R): This script performs matching of double observer records for winter 2018 survey and creates summary statistics for crew member detection and counting.
 
