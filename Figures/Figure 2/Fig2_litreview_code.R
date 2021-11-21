@@ -35,7 +35,7 @@ p <- ggplot(d.long, aes(fill = forcats::fct_rev(type), y=count, x=Bin)) +
   scale_fill_manual(values = c("darkorange1", "dodgerblue3"))+
   ylab("Number of Papers")+
   xlab("Year")+
-  theme_classic(base_size = 12)+
+  theme_classic(base_size = 10)+
   theme(legend.title = element_blank())+
   geom_smooth(method = "lm", se = F, color = "black") #add regression lines
 
@@ -51,13 +51,11 @@ p <- p +
   )
   
 # Create a break in the y-axis 
+png(file = "./fig2_new.png", height = 3.5,
+    width = 5, units = c("in"), res = 600, pointsize = 10) #save figure
 gg.gap(plot=p,
        segments=c(27,35),
        tick_width = 5, c(1, 0, 0.2),
        ylim=c(0,40))
 add.legend(plot = p, margin = c(top=1,right=90,bottom=150,left=1))
-
-# Save the figure
-ggsave(filename="./fig2.png", 
-       device="png",
-       path=path, height=2.5, width=3.5, units="in", dpi=300)
+dev.off()
