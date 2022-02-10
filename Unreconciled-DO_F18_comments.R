@@ -11,7 +11,7 @@ library(reshape)
 library(stringr)
 
 #Load data and clean up 
-setwd("G:/My Drive/GoMMAPPS/Data/SurveyData")
+setwd()
 #Survey data
 DataF18 <- read.csv(file = "./gommapps_aerialSurvey_Feb2018_birds.csv", header = TRUE, stringsAsFactors = F)
 
