@@ -1,4 +1,4 @@
-# Errors in aerial survey count data: identifying pitfalls and solutions
+# [Errors in aerial survey count data: identifying pitfalls and solutions](https://onlinelibrary.wiley.com/doi/10.1002/ece3.8733)
 
 ### [Kayla L. Davis](https://davisk93.github.io/), Emily D. Silverman, [Allison L. Sussman](https://github.com/asussman52), R. Randy Wilson,  & [Elise F. Zipkin](https://ezipkin.github.io/)
 
