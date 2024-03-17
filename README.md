@@ -1,5 +1,7 @@
 # [Errors in aerial survey count data: identifying pitfalls and solutions](https://onlinelibrary.wiley.com/doi/10.1002/ece3.8733)
 
+### Ecology and Evolution
+
 ### [Kayla L. Davis](https://davisk93.github.io/), Emily D. Silverman, [Allison L. Sussman](https://github.com/asussman52), R. Randy Wilson,  & [Elise F. Zipkin](https://ezipkin.github.io/)
 
 ### Code/Data DOI: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6038240.svg)](https://doi.org/10.5281/zenodo.6038240)
